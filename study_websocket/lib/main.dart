@@ -37,9 +37,21 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _controller = TextEditingController();
   final _channel =
       WebSocketChannel.connect(Uri.parse('ws://localhost:8000/ws/chat/cat/'));
+  List<Widget> chatLog = [];
 
   @override
   Widget build(BuildContext context) {
+    var dummy = StreamBuilder(
+      stream: _channel.stream,
+      builder: (context, snapshot) {
+        var msg = Text(snapshot.hasData ? '${snapshot.data}' : '');
+        chatLog.add(msg);
+        var col = Column(
+          children: chatLog,
+        );
+        return col;
+      }
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -56,12 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             const SizedBox(height: 24),
-            StreamBuilder(
-              stream: _channel.stream,
-              builder: (context, snapshot) {
-                return Text(snapshot.hasData ? '${snapshot.data}' : '');
-              },
-            )
+            dummy,
           ],
         ),
       ),
@@ -74,10 +81,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _sendMessage() {
-    print('_sendMessage is hit!');
-    print(_controller.text);
     if (_controller.text.isNotEmpty) {
       _channel.sink.add(json.encode({'message': _controller.text}));
+      _controller.text = '';
     }
   }
 
