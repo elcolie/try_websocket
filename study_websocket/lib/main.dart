@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +37,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _controller = TextEditingController();
   final _channel =
-      WebSocketChannel.connect(Uri.parse('ws://localhost:8000/ws/chat/cat/'));
+      WebSocketChannel.connect(Uri.parse('ws://localhost:8000/ws/chat/cat/?token=8135bddc410bbf9eb8be7fb0ef347576de1b922e'));
   List<Widget> chatLog = [];
 
   @override
