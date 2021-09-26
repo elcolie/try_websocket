@@ -43,12 +43,16 @@ from config.websocket import websocket_application  # noqa isort:skip
 #     else:
 #         raise NotImplementedError(f"Unknown scope type {scope['type']}")
 import chat.routing
+from config.custom_middleware import TokenAuthMiddleware
 
 application = ProtocolTypeRouter({
-  "http": get_asgi_application(),
-  "websocket": AuthMiddlewareStack(
-        URLRouter(
-            chat.routing.websocket_urlpatterns
-        )
-    ),
+    "http": get_asgi_application(),
+    "websocket":
+        TokenAuthMiddleware(
+            AuthMiddlewareStack(
+                URLRouter(
+                    chat.routing.websocket_urlpatterns
+                )
+            )
+        ),
 })
